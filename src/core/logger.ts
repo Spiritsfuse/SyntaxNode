@@ -6,13 +6,11 @@ export class Logger {
   private static spinner: Ora | null = null;
 
   static info(message: string) {
-    this.stopSpinner();
-    console.log(`${chalk.blue('ℹ')} ${message}`);
+    console.log(chalk.blue(`ℹ ${message}`));
   }
 
   static success(message: string) {
-    this.stopSpinner();
-    console.log(`${chalk.green('✔')} ${message}`);
+    console.log(chalk.green(`✔ ${message}`));
   }
 
   static warn(message: string) {
@@ -63,6 +61,11 @@ export class Logger {
   static step(step: string, message: string) {
     this.stopSpinner();
     console.log(`${chalk.bold.magenta(`[${step}]`)} ${message}`);
+  }
+
+  static tool(name: string) {
+    this.stopSpinner();
+    console.log(`${chalk.yellow('🛠')} ${chalk.bold.white(name)}`);
   }
 
   static reason(thought: string) {

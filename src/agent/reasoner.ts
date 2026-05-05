@@ -24,49 +24,34 @@ export class Reasoner {
     const history = memory.getFormattedHistory();
     const prompt = PromptManager.getReasoningPrompt(userRequest, history);
     
-    Logger.startSpinner('Thinking...');
-    try {
-      const response = await this.gemini.generateStructured<ReasoningResponse>(prompt, {
-        thought: 'string',
-        plan: ['string'],
-        tool: { name: 'string', args: {} },
-        status: 'CONTINUE | DONE'
-      });
-      
-      Logger.stopSpinner();
-      return response;
-    } catch (error) {
-      Logger.stopSpinner();
-      throw error;
-    }
-  }
-
-  async thinkStream(userRequest: string, memory: Memory): Promise<ReasoningResponse> {
-    const history = memory.getFormattedHistory();
-    const prompt = PromptManager.getReasoningPrompt(userRequest, history);
-    
     Logger.step('THINK', 'Agent is reasoning...');
-    let fullResponse = '';
+    Logger.startSpinner('Analyzing task and planning next steps...');
     
     try {
-      for await (const chunk of this.gemini.generateStream(prompt)) {
-        fullResponse += chunk;
-        process.stdout.write(chunk); // Stream raw output for "real" feel
-      }
-      process.stdout.write('\n');
+      const response = await this.gemini.generate(prompt);
+      Logger.stopSpinner();
 
       // Improved JSON extraction: find the first { and the last }
-      const firstBrace = fullResponse.indexOf('{');
-      const lastBrace = fullResponse.lastIndexOf('}');
+      const firstBrace = response.indexOf('{');
+      const lastBrace = response.lastIndexOf('}');
       
       if (firstBrace === -1 || lastBrace === -1) {
         throw new Error('No JSON object found in response');
       }
 
-      const jsonStr = fullResponse.substring(firstBrace, lastBrace + 1);
-      return JSON.parse(jsonStr) as ReasoningResponse;
-    } catch (error) {
-      Logger.error('Failed to parse streaming response. Raw output shown above.');
+      const jsonStr = response.substring(firstBrace, lastBrace + 1);
+      const parsed = JSON.parse(jsonStr) as ReasoningResponse;
+      
+      // Now print the thoughts concisely
+      Logger.reason(parsed.thought);
+      if (parsed.plan && parsed.plan.length > 0) {
+        Logger.plan(parsed.plan);
+      }
+      
+      return parsed;
+    } catch (error: any) {
+      Logger.stopSpinner();
+      Logger.error(`Reasoning failed: ${error.message}`);
       throw error;
     }
   }

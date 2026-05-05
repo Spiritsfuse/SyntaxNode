@@ -2,64 +2,61 @@ import { Tool } from './registry';
 import { GeminiClient } from '../core/gemini';
 import { Logger } from '../core/logger';
 
-const gemini = new GeminiClient();
-
 export const generateHtmlTool: Tool = {
   name: 'generate_html',
-  description: 'Generate high-quality HTML structure for a specific section.',
+  description: 'Generate high-fidelity HTML structure for a website section.',
   parameters: {
-    section: 'The section to generate (e.g., hero, header, footer)',
-    requirements: 'Additional requirements for the section',
+    section: 'e.g., Header, Hero, Footer',
+    requirements: 'Specific design details to match (from scrape analysis)',
   },
   execute: async ({ section, requirements }) => {
-    Logger.info(`Generating HTML for ${section}...`);
-    const prompt = `Generate semantic HTML5 code for the '${section}' section of a website cloning Scaler Academy.
+    Logger.step('GENERATE', `Generating HTML for ${section}...`);
+    const prompt = `Generate a production-ready HTML5 snippet for the ${section} section of a website.
 Requirements: ${requirements}
-Use modern tags, include classes for styling, and ensure accessibility.
-Return ONLY the HTML code block.`;
+Use semantic HTML5. Respond ONLY with the code block.`;
     
-    return await gemini.generate(prompt);
+    const gemini = new GeminiClient();
+    const content = await gemini.generate(prompt);
+    return content;
   },
 };
 
 export const generateCssTool: Tool = {
   name: 'generate_css',
-  description: 'Generate professional CSS for a specific section or component.',
+  description: 'Generate high-fidelity CSS for a website section.',
   parameters: {
-    section: 'The section to style',
-    htmlContext: 'The HTML structure this CSS should apply to',
-    requirements: 'Additional styling requirements',
+    section: 'e.g., Header, Hero, Footer',
+    htmlContext: 'The HTML structure this CSS should style',
+    requirements: 'Specific colors, fonts, and layout rules',
   },
   execute: async ({ section, htmlContext, requirements }) => {
-    Logger.info(`Generating CSS for ${section}...`);
-    const prompt = `Generate premium CSS3 code for the following HTML structure:
-${htmlContext}
-
-Section: ${section}
+    Logger.step('GENERATE', `Generating CSS for ${section}...`);
+    const prompt = `Generate premium CSS3 for the ${section} section.
+HTML Context: ${htmlContext}
 Requirements: ${requirements}
-Use modern CSS features (Flexbox, Grid, Variables), premium color palettes (gradients, dark mode support), and smooth animations.
-Follow ui-ux-pro-max principles: elegant spacing, clean typography, responsive design.
-Return ONLY the CSS code block.`;
+Use modern CSS (Flexbox/Grid). Respond ONLY with the code block.`;
     
-    return await gemini.generate(prompt);
+    const gemini = new GeminiClient();
+    const content = await gemini.generate(prompt);
+    return content;
   },
 };
 
 export const generateJsTool: Tool = {
   name: 'generate_js',
-  description: 'Generate high-quality JavaScript for interactivity and animations.',
+  description: 'Generate JavaScript for interactive website components.',
   parameters: {
-    section: 'The section or feature to script',
-    requirements: 'Additional logic requirements',
+    section: 'The component or section requiring JS',
+    requirements: 'Functional requirements (e.g., navbar toggle, animations)',
   },
   execute: async ({ section, requirements }) => {
-    Logger.info(`Generating JS for ${section}...`);
-    const prompt = `Generate modern, efficient JavaScript code for the '${section}' section of a website cloning Scaler Academy.
+    Logger.step('GENERATE', `Generating JS for ${section}...`);
+    const prompt = `Generate modern JavaScript for the ${section}.
 Requirements: ${requirements}
-Use ES6+ features, ensure performance, and handle interactions/animations smoothly.
-Return ONLY the JavaScript code block.`;
+Respond ONLY with the code block.`;
     
-    return await gemini.generate(prompt);
+    const gemini = new GeminiClient();
+    const content = await gemini.generate(prompt);
+    return content;
   },
 };
-

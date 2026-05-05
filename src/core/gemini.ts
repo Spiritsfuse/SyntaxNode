@@ -27,7 +27,7 @@ export class GeminiClient {
       const response = await result.response;
       return response.text();
     } catch (error: any) {
-      Logger.error(`Gemini Error: ${error.message}`);
+      Logger.error(`Gemini generation failed: ${error.message}`);
       throw error;
     }
   }
@@ -37,10 +37,18 @@ export class GeminiClient {
       const result = await this.model.generateContentStream(prompt);
       for await (const chunk of result.stream) {
         const chunkText = chunk.text();
-        if (chunkText) yield chunkText;
+        if (chunkText) {
+          yield chunkText;
+        }
       }
     } catch (error: any) {
-      Logger.error(`Gemini Stream Error: ${error.message}`);
+      // Handle the specific stream error gracefully
+      if (error.message?.includes('Failed to parse stream')) {
+        Logger.warn('Gemini stream parsing error encountered. Falling back to non-streaming for this turn.');
+        const fallbackText = await this.generate(prompt);
+        yield fallbackText;
+        return;
+      }
       throw error;
     }
   }

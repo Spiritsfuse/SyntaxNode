@@ -1,17 +1,35 @@
-node_modules/
-dist/
-generated/
-.env
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.DS_Store
-
-# Assignment Meta Files
+# Internal AI/project context
 PROJECT_RULES.md
-"Assignment 02 — Website Cloner Agent.md"
-Assignment 02 — AI Agent CLI Tool.md
+Assignment 02 - Website Cloner Agent.md
 prompts.md
 notes.md
-private-notes/
+
+# Antigravity internal context
+.antigravity/
+.antigravity/skills/
+
+# Environment
+.env
+.env.local
+.env.example
+
+# Node
+node_modules/
+dist/
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Generated screenshots/temp assets
+screenshots/temp/
+tmp/
+generated/
+scratch/
+
+# Demo
+DEMO_SCRIPT.md

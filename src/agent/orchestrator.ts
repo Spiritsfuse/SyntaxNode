@@ -5,7 +5,7 @@ import { ToolRegistry } from '../tools/registry';
 import { createFileTool, readFileTool, listDirTool } from '../tools/filesystem';
 import { executeCommandTool } from '../tools/shell';
 import { generateHtmlTool, generateCssTool, generateJsTool } from '../tools/web-gen';
-import { openBrowserTool, takeScreenshotTool } from '../tools/browser';
+import { openBrowserTool, scrapeWebsiteTool } from '../tools/browser';
 
 export class Orchestrator {
   private memory: Memory;
@@ -25,7 +25,7 @@ export class Orchestrator {
     ToolRegistry.register(generateCssTool);
     ToolRegistry.register(generateJsTool);
     ToolRegistry.register(openBrowserTool);
-    ToolRegistry.register(takeScreenshotTool);
+    ToolRegistry.register(scrapeWebsiteTool);
   }
 
   async run(userRequest: string) {
@@ -38,19 +38,17 @@ export class Orchestrator {
       currentLoop++;
       Logger.step('LOOP', `Cycle ${currentLoop}`);
 
-      const response = await this.reasoner.thinkStream(userRequest, this.memory);
+      const response = await this.reasoner.think(userRequest, this.memory);
       
-      Logger.reason(response.thought);
-      if (response.plan && response.plan.length > 0) {
-        Logger.plan(response.plan);
-      }
-
       if (response.tool) {
         try {
+          Logger.tool(response.tool.name);
           const result = await ToolRegistry.execute(response.tool.name, response.tool.args);
           this.memory.addEntry('assistant', `Thought: ${response.thought}\nAction: ${response.tool.name}`);
           this.memory.addEntry('tool', `Result of ${response.tool.name}: ${result}`);
+          Logger.success(`${response.tool.name} executed successfully.`);
         } catch (error: any) {
+          Logger.error(`Error executing ${response.tool.name}: ${error.message}`);
           this.memory.addEntry('tool', `Error executing ${response.tool.name}: ${error.message}`);
         }
       } else {
@@ -60,6 +58,14 @@ export class Orchestrator {
       status = response.status;
       if (status === 'DONE') {
         Logger.success('Task completed successfully!');
+        
+        // Final Automation: Open in Browser
+        Logger.step('FINAL', 'Opening in browser...');
+        try {
+          await ToolRegistry.execute('open_browser', { path: 'index.html' });
+        } catch (e) {
+          Logger.warn('Auto-open failed, but files were generated.');
+        }
         break;
       }
     }

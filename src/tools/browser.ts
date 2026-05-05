@@ -1,7 +1,7 @@
 import open from 'open';
-import puppeteer from 'puppeteer';
 import path from 'path';
-import fs from 'fs/promises';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 import { Tool } from './registry';
 import { Logger } from '../core/logger';
 
@@ -15,31 +15,48 @@ export const openBrowserTool: Tool = {
   },
   execute: async ({ path: filePath }) => {
     const fullPath = path.join(GENERATED_DIR, filePath);
-    Logger.info(`Opening ${filePath} in browser...`);
-    await open(fullPath);
-    return `Opened ${filePath} in browser.`;
+    Logger.info(`Attempting to open ${filePath} in browser...`);
+    try {
+      await open(fullPath);
+      return `Opened ${filePath} in browser.`;
+    } catch (error: any) {
+      Logger.error(`Failed to open browser: ${error.message}`);
+      return `Error opening browser: ${error.message}`;
+    }
   },
 };
 
-export const takeScreenshotTool: Tool = {
-  name: 'take_screenshot',
-  description: 'Take a screenshot of a generated HTML file using Puppeteer.',
+export const scrapeWebsiteTool: Tool = {
+  name: 'scrape_website',
+  description: 'Analyze a target website to extract its structure, content, and styling.',
   parameters: {
-    path: 'Relative path of the HTML file from generated/ directory',
-    outputName: 'Name of the output screenshot file (e.g., preview.png)',
+    url: 'The URL of the website to analyze',
   },
-  execute: async ({ path: filePath, outputName = 'preview.png' }) => {
-    const fullPath = `file://${path.join(GENERATED_DIR, filePath)}`;
-    const outputPath = path.join(GENERATED_DIR, outputName);
-    
-    Logger.info(`Taking screenshot of ${filePath}...`);
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 800 });
-    await page.goto(fullPath, { waitUntil: 'networkidle0' });
-    await page.screenshot({ path: outputPath, fullPage: true });
-    await browser.close();
-    
-    return `Screenshot saved as ${outputName} in generated directory.`;
+  execute: async ({ url }) => {
+    Logger.info(`Analyzing website: ${url}...`);
+    try {
+      const { data } = await axios.get(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+      });
+      const $ = cheerio.load(data);
+      
+      // Extract key info for cloning
+      const title = $('title').text();
+      const metaDescription = $('meta[name="description"]').attr('content');
+      
+      // Get a simplified view of the body structure
+      const bodyPreview = $('body').html()?.substring(0, 5000) || 'No body content';
+      
+      return JSON.stringify({
+        title,
+        metaDescription,
+        bodyStructure: 'Extracted first 5000 chars of body for analysis. Use this to understand the DOM tree.',
+        rawHtml: bodyPreview
+      }, null, 2);
+    } catch (error: any) {
+      return `Failed to scrape website: ${error.message}`;
+    }
   },
 };

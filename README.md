@@ -4,7 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![Gemini](https://img.shields.io/badge/Gemini-2.5--Flash-orange.svg)](https://deepmind.google/technologies/gemini/)
 
-**SyntaxNode** is a production-grade AI Agent CLI tool designed for autonomous website cloning and code generation. Inspired by modern AI coding assistants like Cursor and Windsurf, SyntaxNode implements a robust **reasoning loop** to think, plan, and execute tasks with high precision.
+**SyntaxNode** is a production-grade AI Agent CLI tool built for high-fidelity website cloning. Unlike generic code generators, SyntaxNode uses an iterative **Agent Loop** to analyze target structures and reproduce them with pixel-perfect accuracy.
 
 ---
 
@@ -12,38 +12,37 @@
 
 [![Watch the Demo](https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=for-the-badge&logo=youtube)](YOUR_YOUTUBE_LINK_HERE)
 
-*A full walkthrough of the agent cloning Scaler Academy in the terminal, followed by a browser preview.*
+*A complete walkthrough of SyntaxNode autonomously cloning the Scaler Academy landing page.*
 
 ---
 
-## 🚀 Features
-
-- **Agentic Reasoning Loop**: Implements a continuous **THINK -> PLAN -> TOOL -> OBSERVE** cycle.
-- **Live Streaming Output**: Real-time reasoning logs streamed to the terminal for a "live" agent experience.
-- **Premium Web Generation**: Specialized tools for high-fidelity HTML5, CSS3, and modern JavaScript.
-- **Browser Automation**: Automatically opens the generated website and captures screenshots via Puppeteer.
-- **Production-Grade Architecture**: Modular, typed, and scalable codebase built with TypeScript.
-- **Google Gemini 2.5 Flash**: Powered by the latest low-latency, high-performance AI models.
-
----
-
-## 📸 Cloned Website Preview
+## 📸 Cloned Website Preview (scaler.com)
 
 ![Scaler Academy Clone Preview](docs/screenshots/preview.png)
-*Generated autonomously by SyntaxNode in under 60 seconds.*
+*High-fidelity clone of the Scaler Academy Header, Hero, and Footer sections.*
+
+---
+
+## 🚀 Key Features
+
+- **Autonomous Cloning Engine**: Specifically optimized for reproducing complex layouts like `scaler.com`.
+- **Agentic Reasoning Loop**: Uses a **THINK -> PLAN -> GENERATE -> OBSERVE -> VERIFY** cycle.
+- **Live Streaming Interface**: Real-time terminal logs provide transparency into the agent's "thought" process.
+- **Auto-Open & Automation**: Automatically launches the browser and captures previews upon completion.
+- **Production Architecture**: Built with TypeScript, Commander.js, and Google Gemini 2.5 Flash.
 
 ---
 
 ## 🛠 Architecture
 
-SyntaxNode is built with a decoupled architecture for maximum flexibility:
+SyntaxNode follows a modular, decoupled design:
 
-- **Orchestrator**: The central engine driving the agent's reasoning loop.
-- **Reasoner**: Interfaces with Gemini 2.5 Flash using structured prompts.
-- **Tool Registry**: A modular system for registering and executing agent capabilities (FS, Shell, Browser).
-- **Memory System**: Context-aware history management to enable iterative refinement.
+- **Orchestrator**: Manages the iterative task loop and final automation.
+- **Reasoner**: Leverages Gemini 2.5 Flash for structured planning and decision-making.
+- **Tool Registry**: Centralized system for filesystem, shell, and specialized web tools.
+- **Memory**: Persistent context for multi-step refinement cycles.
 
-Detailed technical documentation can be found in [ARCHITECTURE.md](ARCHITECTURE.md).
+See [ARCHITECTURE.md](ARCHITECTURE.md) for deeper technical insights.
 
 ---
 
@@ -61,11 +60,10 @@ Detailed technical documentation can be found in [ARCHITECTURE.md](ARCHITECTURE.
    ```
 
 3. **Configure Environment**:
-   Create a `.env` file from the template:
    ```bash
    cp .env.example .env
+   # Add your GEMINI_API_KEY to .env
    ```
-   Add your `GEMINI_API_KEY` to the `.env` file.
 
 4. **Build the Project**:
    ```bash
@@ -76,26 +74,20 @@ Detailed technical documentation can be found in [ARCHITECTURE.md](ARCHITECTURE.
 
 ## 🎮 Usage
 
-### Start a Conversational Session
-Interact with the agent directly for any coding task:
-```bash
-npm run start chat
-```
-
-### Clone Scaler Academy (One-Shot)
-Specifically optimized command for the assignment requirement:
+### One-Command Clone
+Run the master command to clone Scaler Academy autonomously:
 ```bash
 npm run start clone
 ```
 
-The generated files will be stored in the `/generated` directory and automatically opened in your browser.
+### Conversational Mode
+Chat with the agent for custom instructions:
+```bash
+npm run start chat
+```
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Built with ❤️ by the SyntaxNode Team.
+MIT License.
