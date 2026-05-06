@@ -91,3 +91,14 @@ npm run start chat
 ## 📄 License
 
 MIT License.
+
+---
+
+<div align="center">
+
+Built and maintained by Dhruv Sharma
+SyntaxNode © 2026
+
+</div>
+
+---
