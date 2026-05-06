@@ -96,8 +96,7 @@ MIT License.
 
 <div align="center">
 
-Built and maintained by Dhruv Sharma
-SyntaxNode © 2026
+Built and maintained by Dhruv Sharma | SyntaxNode © 2026
 
 </div>
 
