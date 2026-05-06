@@ -18,8 +18,8 @@
 
 ## 📸 Cloned Website Preview (scaler.com)
 
-![Scaler Academy Clone Preview](docs/screenshots/preview.png)
-*High-fidelity clone of the Scaler Academy Header, Hero, and Footer sections.*
+![Scaler Academy Clone Preview](assets/preview.png)
+*High-fidelity runtime replay of the Scaler Academy homepage, featuring deterministic hydration and animation stabilization.*
 
 ---
 

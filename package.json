@@ -14,7 +14,7 @@
     "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.11.1",
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.16.0",
     "boxen": "^5.1.2",
     "chalk": "^4.1.2",

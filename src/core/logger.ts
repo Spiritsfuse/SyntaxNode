@@ -6,30 +6,30 @@ export class Logger {
   private static spinner: Ora | null = null;
 
   static info(message: string) {
-    console.log(chalk.blue(`ℹ ${message}`));
+    console.log(chalk.dim(`  ℹ ${message}`));
   }
 
   static success(message: string) {
-    console.log(chalk.green(`✔ ${message}`));
+    console.log(chalk.green(`  ✔ ${message}`));
   }
 
   static warn(message: string) {
     this.stopSpinner();
-    console.log(`${chalk.yellow('⚠')} ${message}`);
+    console.log(`  ${chalk.yellow('⚠')} ${message}`);
   }
 
   static error(message: string) {
     this.stopSpinner();
-    console.log(`${chalk.red('✖')} ${message}`);
+    console.log(`  ${chalk.red('✖')} ${message}`);
   }
 
   static header(message: string) {
     this.stopSpinner();
     console.log(
       boxen(chalk.bold.cyan(message), {
-        padding: 1,
-        margin: 1,
-        borderStyle: 'double',
+        padding: { top: 0, bottom: 0, left: 2, right: 2 },
+        margin: { top: 1, bottom: 1, left: 0, right: 0 },
+        borderStyle: 'round',
         borderColor: 'cyan',
       })
     );
@@ -45,8 +45,9 @@ export class Logger {
       this.spinner.text = message;
     } else {
       this.spinner = ora({
-        text: message,
+        text: chalk.dim(message),
         color: 'cyan',
+        spinner: 'dots',
       }).start();
     }
   }
@@ -65,27 +66,20 @@ export class Logger {
 
   static tool(name: string) {
     this.stopSpinner();
-    console.log(`${chalk.yellow('🛠')} ${chalk.bold.white(name)}`);
+    console.log(`${chalk.cyan('  🛠')} ${chalk.bold.white(name)}`);
   }
 
   static reason(thought: string) {
     this.stopSpinner();
-    console.log(chalk.bold.gray(`\n🧠 THOUGHTS:`));
-    console.log(boxen(chalk.italic.whiteBright(thought), {
-      padding: 1,
-      margin: 0,
-      borderColor: 'gray',
-      borderStyle: 'round',
-      dimBorder: true
-    }));
-    console.log();
+    console.log(`\n${chalk.bold.gray('[THINK]')}`);
+    console.log(`${chalk.white(thought)}\n`);
   }
 
   static plan(steps: string[]) {
     this.stopSpinner();
-    console.log(chalk.cyan(`\n📋 PLAN:`));
+    console.log(`${chalk.bold.gray('[PLAN]')}`);
     steps.forEach((step, i) => {
-      console.log(chalk.cyan(`  ${i + 1}. ${step}`));
+      console.log(chalk.dim(`  ${i + 1}. ${step}`));
     });
     console.log();
   }

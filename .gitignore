@@ -25,8 +25,7 @@ Thumbs.db
 # Logs
 *.log
 
-# Generated screenshots/temp assets
-screenshots/temp/
+# Generated/temp assets
 tmp/
 generated/
 scratch/

@@ -6,6 +6,7 @@ import { Memory } from './memory';
 export interface ReasoningResponse {
   thought: string;
   plan: string[];
+  currentPhase: string;
   tool: {
     name: string;
     args: any;
@@ -22,16 +23,15 @@ export class Reasoner {
 
   async think(userRequest: string, memory: Memory): Promise<ReasoningResponse> {
     const history = memory.getFormattedHistory();
-    const prompt = PromptManager.getReasoningPrompt(userRequest, history);
+    const systemPrompt = PromptManager.getSystemPrompt();
+    const prompt = `${systemPrompt}\n\n${PromptManager.getReasoningPrompt(userRequest, history)}`;
     
-    Logger.step('THINK', 'Agent is reasoning...');
-    Logger.startSpinner('Analyzing task and planning next steps...');
+    Logger.startSpinner('Reasoning...');
     
     try {
       const response = await this.gemini.generate(prompt);
       Logger.stopSpinner();
 
-      // Improved JSON extraction: find the first { and the last }
       const firstBrace = response.indexOf('{');
       const lastBrace = response.lastIndexOf('}');
       
@@ -42,7 +42,12 @@ export class Reasoner {
       const jsonStr = response.substring(firstBrace, lastBrace + 1);
       const parsed = JSON.parse(jsonStr) as ReasoningResponse;
       
-      // Now print the thoughts concisely
+      // Update state in memory
+      memory.updateState({
+        currentPhase: parsed.currentPhase,
+        completedSteps: memory.getState().completedSteps,
+      });
+
       Logger.reason(parsed.thought);
       if (parsed.plan && parsed.plan.length > 0) {
         Logger.plan(parsed.plan);
