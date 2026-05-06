@@ -10,7 +10,7 @@
 
 ## 📺 Demo Video
 
-[![Watch the Demo](https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=for-the-badge&logo=youtube)](YOUR_YOUTUBE_LINK_HERE)
+[![SyntaxNode Demo](https://img.youtube.com/vi/TM9_vrrk7qA/maxresdefault.jpg)](https://www.youtube.com/watch?v=TM9_vrrk7qA)
 
 *A complete walkthrough of SyntaxNode autonomously cloning the Scaler Academy landing page.*
 
